@@ -1,21 +1,18 @@
 #!/bin/bash
-#!/usr/local/bin/expect
 
 echo "Assignment #3-1, Taylor Ewertz, t_ewertz@yahoo.com"
 
-pword=`egrep -i "$2|$2" $1 | cut -d',' -f3`
-echo $pword
+name=`egrep -i "$3|$3" $1 | cut -d' ' -f1 |tr '[:upper:]' '[:lower:]'`
+pword=`egrep -i "$3|$3" $1 | cut -d',' -f3`
 
-#expect -c "
-#	spawn scp $2@/home/taylor/CS320Assignment3:encryptor .
-#	expect password: { send $pword\r }
-#	sleep 1
-#	exit
-#"
-
-#for fn in `grep -lr "file" `
-#do
-#	cp $fn `basename $fn`.enc
-#	echo `basename $fn` .enc
-#done
+expect -c "
+	spawn scp $name@$2:* .
+	expect password: { send $pword\r }
+	sleep 1
+	exit
+" > /dev/null
+for fn in `ls *.enc encryptor`
+do
+	echo $fn
+done
 
